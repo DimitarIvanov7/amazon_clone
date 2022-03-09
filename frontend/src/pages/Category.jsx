@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 import GetCategoryData from '../hooks-functions/GetCategoryData'
 import SpecificItem from '../components/SpecificItem'
+import StarRating from '../components/StarRating'
 
 
 const Container = styled.div`
@@ -13,10 +14,6 @@ const Container = styled.div`
     background-color: white;
 `
 
-const FiltersContainer = styled.div`
-    grid-column: 1/1;
-    
-`
 const ResultsContainer = styled.div`
     grid-column: 2/-1;
     
@@ -28,7 +25,74 @@ const ProductsContainer = styled.div`
     flex-wrap: wrap;
     gap: .5rem;
     margin-right: 2rem;
+`
 
+
+const FiltersContainer = styled.div`
+    grid-column: 1/1;
+    display: flex;
+    padding-left: 2rem;
+    align-items: flex-start;
+    flex-direction: column;
+    
+`
+
+const ReviewsFilter = styled.div`
+    margin-top: 5rem;
+`
+
+const SmallReviewContainer = styled.div`
+    display: flex;
+
+    p {
+        margin:0 0 0 5px;
+        cursor: pointer;
+
+        &:hover {
+            text-decoration: underline;
+            color: #ee9e0a;
+        }
+    }
+`
+
+const PriceFilter = styled.div`
+    margin-top: 1rem;
+`
+const PriceRangeContainer = styled.div`
+    
+`
+const PriceRange = styled.p`
+    cursor: pointer;
+
+    &:hover {
+        text-decoration: underline;
+        color: #ee9e0a;
+    }
+`
+
+const MinMaxContainer = styled.form`
+    display: flex;
+    max-width: 100%;
+    gap: .5rem;
+`
+
+const MinMaxInput = styled.input`
+    width: 31%;
+    height: 1.5rem;
+    
+`
+
+const PriceSearchButton = styled.button`
+    cursor: pointer;
+    border: 1px solid #c7c7c7;
+    background-color: white;
+    border-radius: 7px;
+    box-shadow: 0 2px 5px #8888885a;
+
+
+    &:hover {
+        background-color: #bebbbb5a;
+    }
 `
 
 
@@ -49,20 +113,97 @@ function Category() {
         setCategory(category)
     }
 
+    //starfilter
+    const StarFilter = () => {
+        let arr = []
+        for (let i = 4; i > 0; i--) {
+            arr.push(
+                <SmallReviewContainer style={{display:"flex"}}>
+                    <StarRating rating={i}/> <p id={i}> and Up</p>
+                </SmallReviewContainer >
+            
+            )
+        }
+        return arr
+    }
+
+    //const price ranges 
+    const priceRanges = [
+        [
+            25
+        ],
+
+        [
+            25, 50
+        ],
+
+        [
+            50, 100
+        ],
+
+        [
+            100, 200
+        ],
+
+        [
+            200
+        ]
+    ]
+
+
+    const getPriceRange = (priceRange) => {
+        const data = priceRange.map((range, index) => {
+            if (priceRange.length === 1)
+                return (range === 25 ? `Under $${range}` : `$${range} & Above`)
+            if(index === priceRange.length-1) return `$${range}`
+            return `$${range} to `
+        })
+
+        return data
+    }
+
+    //minMax input
+    const minInput = useRef(null);
+    const maxInput = useRef(null);
+
+    const [priceRange, setPriceRange] = useState([])
+
+    const HandleInputRange = (e) => {
+        e.preventDefault()
+        const filterData = (value) => {
+            return minInput.current.value < value.Price && value.Price < maxInput.current.value
+        }
+        const filtered = category.filter((cat) => filterData(cat))
+        setCategory(filtered)
+    }
 
 
   return (
       <Container>
           <FiltersContainer>
-
+              <ReviewsFilter>
+                  <p style={{margin:"0 0 1rem 0", fontWeight:"bold"}}>Avg. Customer Review</p>
+                  {StarFilter()}
+              </ReviewsFilter>
+              <PriceFilter>
+                  <PriceRangeContainer>
+                      <p style={{fontWeight:"bold"}}>Price</p>
+                      {priceRanges.map(range => 
+                            <PriceRange>{getPriceRange(range)}</PriceRange>
+                        )}
+                </PriceRangeContainer>
+                  <MinMaxContainer onSubmit={(e) => HandleInputRange(e)}>
+                    <MinMaxInput ref={minInput} id='min-price' placeholder='$ Min' required/>
+                    <MinMaxInput ref={maxInput} id='min-price' placeholder='$ Max' required/>
+                    <PriceSearchButton type='submit'>Go</PriceSearchButton>
+                </MinMaxContainer>
+              </PriceFilter>
           </FiltersContainer>
           <ResultsContainer>
               <h2>Results</h2>
               <ProductsContainer>
                   {category && category.map(product => 
-                      
-                      <SpecificItem item={product.Data} type={ "search"}/>
-                        
+                      <SpecificItem item={product} type={ "search"}/>
                     )}
               </ProductsContainer>
           </ResultsContainer>
