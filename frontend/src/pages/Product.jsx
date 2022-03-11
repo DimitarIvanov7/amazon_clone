@@ -1,8 +1,8 @@
-import React from 'react'
 import { useParams } from 'react-router-dom'
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect} from 'react'
 import styled from 'styled-components'
 import HomepageSlickSlider from '../components/HomepageSlickSlider'
+import GetSingleProductsData from '../hooks-functions/GetSingleProductData'
 
 import StarRating from '../components/StarRating'
 
@@ -189,16 +189,13 @@ function Product() {
   useEffect(() => {
       getProductData()
       
-  }, [])
+  }, [id])
 
   const getProductData = async () => {
-      const req = await fetch(`http://localhost:5000/product/${id}`);
-      const res = await req.json();
 
-    console.log(res);
-    console.log(res.Data);
-    setProduct(res.Data)
-    // console.log(product);
+    const product = await GetSingleProductsData(id)
+
+    setProduct(product)
 
   
   }
@@ -211,37 +208,37 @@ function Product() {
           
           <ImagesContainer>
               <SmallImgContainer id="small-img-container">
-                {product.images && product.images.map(img =>
+                {product.Data.images && product.Data.images.map(img =>
                   <SmallImg src={img.link }/>
                 )}
               </SmallImgContainer>
-              <MainImg src={product.main_image.link} />
+              <MainImg src={product.Data.main_image.link} />
           </ImagesContainer>
           
           <InfoContainer>
-            <Title>{product.title}</Title>
+            <Title>{product.Data.title}</Title>
               <DescriptionContainer>
                 <Description>
                   <RatingContainer>
-                    <StarRating rating={product.rating} />
-                    <p style={{margin:"0"}}>{product.ratings_total}</p>
+                    <StarRating rating={product.Data.rating} />
+                    <p style={{margin:"0"}}>{product.Data.ratings_total}</p>
                 </RatingContainer>
                 
   
-                <Price><span style={{color:"black", fontSize:"18px"}}>Price:</span> {product.buybox_winner.price ? product.buybox_winner.price.raw : "$25"}</Price>
-                {product.feature_bullets ?
+                <Price><span style={{color:"black", fontSize:"18px"}}>Price:</span> ${product.Price}</Price>
+                {product.Data.feature_bullets ?
                   <FeatureBulletContainer>
-                    {product.feature_bullets.map(bullet =>
+                    {product.Data.feature_bullets.map(bullet =>
                       <FeatureBullet>{bullet}</FeatureBullet>
                     )}
-                  </FeatureBulletContainer> : product.specifications ? <FeatureBulletContainer>
-                    {product.specifications.map(spec =>
+                  </FeatureBulletContainer> : product.Data.specifications ? <FeatureBulletContainer>
+                    {product.Data.specifications.map(spec =>
                       <FeatureBullet>{spec.name} - {spec.value}</FeatureBullet>
-                    )} </FeatureBulletContainer> : <BookDescription>{product.book_description}</BookDescription>
+                    )} </FeatureBulletContainer> : <BookDescription>{product.Data.book_description}</BookDescription>
                   }
                 </Description>
                 <PriceContainer>
-                  <Price>{product.buybox_winner.price ? product.buybox_winner.price.raw : "$25"}</Price>
+                  <Price>${product.Price}</Price>
                   <Quantity> 
                     <option value="1">Qty: 1</option>
                     <option value="1">2</option>
@@ -254,7 +251,7 @@ function Product() {
             </InfoContainer>
           {/* <HomepageSlickSlider title={"Additional products to explore"} itemsShow={8} products={products[0]} /> */}
             <ReviewsContainer>
-              {product.top_reviews && product.top_reviews.map(review =>
+              {product.Data.top_reviews && product.Data.top_reviews.map(review =>
                 <SingleReview>
                   <div style={{ display:"flex", alignItems:"center"}}>
                     <img src="/images/default-profile.jpg" alt="" />
