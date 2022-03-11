@@ -1,33 +1,36 @@
 {
-  "dependencies": {
-    "body-parser": "^1.19.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.0.0",
-    "express": "^4.17.3",
-    "g": "^2.0.1",
-    "mongoose": "^6.2.4",
-    "morgan": "^1.10.0",
-    "node-fetch": "^3.2.1",
-    "nodemon": "^2.0.15",
-    "react-router-dom": "^6.2.2"
-  },
-  "name": "amazon-clone",
-  "version": "1.0.0",
-  "type": "module",
-  "description": "Amazon clone with MERN",
-  "main": "app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "lint": "eslint frontend/src --ext .js,.jsx"
-  },
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "eslint": "^6.1.0",
-    "eslint-config-prettier": "^6.10.0",
-    "eslint-plugin-prettier": "^3.1.2",
-    "eslint-plugin-react": "^7.29.3",
-    "lint-staged": "^12.3.5",
-    "prettier": "^1.19.1"
-  }
+	"dependencies": {
+		"cors": "^2.8.5",
+		"dotenv": "^16.0.0",
+		"express": "^4.17.3",
+		"g": "^2.0.1",
+		"mongoose": "^6.2.4",
+		"morgan": "^1.10.0",
+		"node-fetch": "^3.2.1",
+		"nodemon": "^2.0.15",
+		"react-router-dom": "^6.2.2"
+	},
+	"name": "amazon-clone",
+	"version": "1.0.0",
+	"type": "module",
+	"description": "Amazon clone with MERN",
+	"main": "app.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"lint": "eslint frontend/src --ext .js,.jsx",
+		"prepare": "husky install"
+	},
+	"author": "",
+	"license": "ISC",
+	"devDependencies": {
+		"eslint": "^6.1.0",
+		"eslint-config-prettier": "^6.15.0",
+		"eslint-plugin-prettier": "^3.1.2",
+		"husky": "^7.0.4",
+		"lint-staged": "^12.3.5",
+		"prettier": "^1.19.1"
+	},
+	"lint-staged": {
+		"*.{js,jsx}": "eslint --cache --fix"
+	}
 }
