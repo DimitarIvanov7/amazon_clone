@@ -3,6 +3,10 @@
 describe("add products to the cart", () => {
 	it("user can add products", () => {
 		cy.visit("http://localhost:3000/");
+		//specify category
+
+		cy.get(".sc-kLwhqv").select("Electronics");
+
 		// search for product
 		cy.findByTestId("header-1").within(() => {
 			cy.findByRole("textbox").type("radar");
