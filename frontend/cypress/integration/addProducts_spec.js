@@ -34,11 +34,15 @@ describe("add products to the cart", () => {
 
 		//add more items
 		for (let n = 0; n < 5; n++) {
-			cy.findByRole("button", { name: /\+/i }).click();
+			cy.findByRole("button", { name: /\+/i }).click({ force: true });
 		}
+
+		cy.get(".sc-bilyIR").should("be.visible");
 
 		// click procceed
 
-		cy.findByRole("button", { name: /proceed checkout/i }).click();
+		cy.findByRole("button", { name: /proceed checkout/i }).click({
+			force: true,
+		});
 	});
 });
