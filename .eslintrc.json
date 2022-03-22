@@ -21,6 +21,6 @@
 		"react/react-in-jsx-scope": "off",
 		"react/prop-types": 1,
 		"no-unused-vars": 1,
-		"react/jsx-key": 2
+		"react/jsx-key": 1
 	}
 }

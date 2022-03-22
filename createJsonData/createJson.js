@@ -1,9 +1,9 @@
-import fs from 'fs'
-import mongoose from 'mongoose';
-import { ProductData } from '../models/productModel.js'
+// import fs from "fs";
+// import mongoose from "mongoose";
+// import { ProductData } from "../models/productModel.js";
 
-import dotenv from "dotenv"
-dotenv.config()
+// import dotenv from "dotenv";
+// dotenv.config();
 
 // const directoryPath = 'jsonData'
 
@@ -11,11 +11,10 @@ dotenv.config()
 //     //handling error
 //     if (err) {
 //         return console.log('Unable to scan directory: ' + err);
-//     } 
+//     }
 //     objectData(files)
 
 // });
-
 
 // const readData = async (file) => {
 //     let rawdata = fs.readFileSync(`jsonData/${file}`);
@@ -36,7 +35,6 @@ dotenv.config()
 
 // }
 
-
 // function saveFile(data) {
 //     // stringify to save jsonfile
 //     const objectsStr = JSON.stringify(data);
@@ -47,28 +45,26 @@ dotenv.config()
 //     })
 // }
 
+// const readData = async () => {
+// 	let rawdata = fs.readFileSync("./jsonData/products.json");
+// 	let products = JSON.parse(rawdata);
 
-const readData = async () => {
-    let rawdata = fs.readFileSync('./jsonData/products.json');
-    let products = JSON.parse(rawdata);
+// 	products.forEach((element, index) => {
+// 		const productsNew = new ProductData({
+// 			Id: index,
+// 			Data: element.product,
+// 		});
 
+// 		productsNew.save().then((result) => {
+// 			console.log(result);
+// 		});
+// 	});
+// };
 
-    products.forEach((element, index) => {
-        const productsNew = new ProductData({
-            Id: index,
-            Data: element.product
-        })
-
-        productsNew.save().then((result)=>{
-            console.log(result);
-        })
-    });
-}
-
-
-
-mongoose.connect(process.env.MONGODB_URI,  {useNewUrlParser: true, useUnifiedTopology: true})
-    .then((result)=> readData())
-    .catch((err)=> console.log(err))
-
-
+// mongoose
+// 	.connect(process.env.MONGODB_URI, {
+// 		useNewUrlParser: true,
+// 		useUnifiedTopology: true,
+// 	})
+// 	.then((result) => readData())
+// 	.catch((err) => console.log(err));

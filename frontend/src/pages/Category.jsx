@@ -4,6 +4,12 @@ import { useState, useEffect, useRef } from "react";
 import GetCategoryData from "../hooks-functions/GetCategoryData";
 import SpecificItem from "../components/SpecificItem";
 import StarRating from "../components/StarRating";
+import { useLocation } from "react-router-dom";
+import GetAllProductsData from "../hooks-functions/GetAllProductsData";
+
+import { useSelector, useDispatch } from "react-redux";
+import { bindActionCreators } from "redux";
+import { actionCreators } from "../state/index";
 
 const Container = styled.div`
 	display: grid;
@@ -88,46 +94,107 @@ const PriceSearchButton = styled.button`
 `;
 
 function Category() {
+	//determine if it's category page or search page
 	const { name } = useParams();
 
-	const [category, setCategory] = useState(null);
+	const { search } = useLocation();
 
+	const query = new URLSearchParams(search);
+	const q = query.get("q");
+	const cat = query.get("cat");
+
+	const [category, setCategory] = useState(null);
 	useEffect(() => {
 		getData();
-	}, [name]);
+	}, [name, q, cat]);
 
+	//redux tests
+	const dispatch = useDispatch();
+	const { initialState } = bindActionCreators(actionCreators, dispatch);
 	const getData = async () => {
-		const categoryData = await GetCategoryData(name);
+		const categoryData = name
+			? await GetCategoryData(name)
+			: await GetAllProductsData("get-products");
 
-		console.log(categoryData);
-		setCategory(categoryData);
+		const filteredData = !name ? await formatSortSearch(categoryData) : null;
+
+		initialState({
+			state: filteredData ? filteredData : categoryData,
+		});
 	};
 
-	//starfilter
+	const searchState = useSelector((state) => state.search);
 
-	const filterReview = async (rating) => {
-		const categoryData = await GetCategoryData(name);
-		const filtered = categoryData.filter((cat) => cat.Data.rating >= rating);
+	useEffect(() => {
+		setCategory(searchState.length > 0 && searchState);
+	}, [searchState]);
+
+	const formatSortSearch = async (data) => {
+		const awaitData = await data;
+		return awaitData.products
+			.map((product) => product)
+			.flat()
+			.filter((item) => {
+				if (cat === "All Departments")
+					return item.Data.title.toLowerCase().includes(q.toLowerCase());
+				return (
+					filterCategories(item.Data.categories) &&
+					item.Data.title.toLowerCase().includes(q.toLowerCase())
+				);
+			});
+	};
+
+	// price ranges
+	//minMax input
+	const minInput = useRef(null);
+	const maxInput = useRef(null);
+
+	const filterData = (value, min, max) => {
+		return min <= value.Price && value.Price <= max;
+	};
+
+	const filterCategories = (arr) => {
+		return arr.find(function(ele) {
+			return ele.name.toLowerCase().includes(cat.toLowerCase());
+		});
+	};
+
+	const HandleInputRange = async (e) => {
+		e.preventDefault();
+
+		console.log(minInput.current.value, maxInput.current.value);
+
+		setCategory(
+			searchState.filter((cat) =>
+				filterData(cat, minInput.current.value, maxInput.current.value)
+			)
+		);
+	};
+
+	const filterFixedRange = async (range) => {
+		const setData = (filtered) => {
+			setCategory(filtered);
+		};
+
+		if (range.length === 1) {
+			if (range[0] === 25) {
+				setData(searchState.filter((cat) => filterData(cat, 0, range[0])));
+				return;
+			}
+
+			const filtered = searchState.filter((cat) =>
+				filterData(cat, range[0], 999999)
+			);
+			setCategory(filtered);
+			return;
+		}
+
+		const filtered = searchState.filter((cat) =>
+			filterData(cat, range[0], range[1])
+		);
 		setCategory(filtered);
 	};
 
-	const StarFilter = () => {
-		let arr = [];
-		for (let i = 4; i > 0; i--) {
-			arr.push(
-				<SmallReviewContainer style={{ display: "flex" }}>
-					<StarRating rating={i} />{" "}
-					<p onClick={() => filterReview(i)} id={i}>
-						{" "}
-						and Up
-					</p>
-				</SmallReviewContainer>
-			);
-		}
-		return arr;
-	};
-
-	//const price ranges
 	const priceRanges = [[25], [25, 50], [50, 100], [100, 200], [200]];
 
 	const getPriceRange = (priceRange) => {
@@ -151,50 +218,26 @@ function Category() {
 		return data();
 	};
 
-	//minMax input
-	const minInput = useRef(null);
-	const maxInput = useRef(null);
-
-	const filterData = (value, min, max) => {
-		return min <= value.Price && value.Price <= max;
-	};
-
-	const HandleInputRange = async (e) => {
-		e.preventDefault();
-
-		const categoryData = await GetCategoryData(name);
-
-		const filtered = categoryData.filter((cat) =>
-			filterData(cat, minInput.current.value, maxInput.current.value)
-		);
-
+	//starfilter
+	const filterReview = async (rating) => {
+		const filtered = searchState.filter((cat) => cat.Data.rating >= rating);
 		setCategory(filtered);
 	};
 
-	const filterFixedRange = async (range) => {
-		const categoryData = await GetCategoryData(name);
-
-		const setData = (filtered) => {
-			setCategory(filtered);
-		};
-
-		if (range.length === 1) {
-			if (range[0] === 25) {
-				setData(categoryData.filter((cat) => filterData(cat, 0, range[0])));
-				return;
-			}
-
-			const filtered = categoryData.filter((cat) =>
-				filterData(cat, range[0], 999999)
+	const StarFilter = () => {
+		let arr = [];
+		for (let i = 4; i > 0; i--) {
+			arr.push(
+				<SmallReviewContainer style={{ display: "flex" }}>
+					<StarRating rating={i} />{" "}
+					<p onClick={() => filterReview(i)} id={i}>
+						{" "}
+						and Up
+					</p>
+				</SmallReviewContainer>
 			);
-			setCategory(filtered);
-			return;
 		}
-
-		const filtered = categoryData.filter((cat) =>
-			filterData(cat, range[0], range[1])
-		);
-		setCategory(filtered);
+		return arr;
 	};
 
 	return (
