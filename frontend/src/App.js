@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import { useState, useEffect } from "react";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
@@ -8,8 +8,10 @@ import Product from "./pages/Product";
 import GetAllProducstData from "./hooks-functions/GetAllProductsData";
 import Category from "./pages/Category";
 import Cart from "./pages/Cart";
+import Checkout from "./pages/Checkout";
 
 const MainContainer = styled.div``;
+
 function App() {
 	const [categories, setCategories] = useState([]);
 
@@ -37,7 +39,9 @@ function App() {
 							<Route path="/" element={<Home products={products} />} />
 							<Route path="/product/:id" element={<Product />} />
 							<Route path="/category/:name" element={<Category />} />
+							<Route path="/search" element={<Category />} />
 							<Route path="/cart" element={<Cart />} />
+							<Route path="/checkout" element={<Checkout />} />
 						</Routes>
 						<Footer />
 					</>

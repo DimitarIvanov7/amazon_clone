@@ -1,3 +1,5 @@
 node_modules/
 frontend/build/
 frontend/node_modules/
+createJsonData
+frontend/src/state/index.js
