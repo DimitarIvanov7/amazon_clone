@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import express from "express";
 import dotenv from "dotenv";
 dotenv.config();
@@ -72,23 +71,6 @@ app.get("/category/:name", async (req, res) => {
 		res.send(false);
 	}
 });
-
-// app.get("/search", async (req, res) => {
-// 	const query = req.query.title;
-// 	console.log(query);
-
-// 	const searchProducts = await ProductData.find({
-// 		"Data.title": new RegExp(query, "i"),
-// 	});
-
-// 	console.log(searchProducts);
-
-// 	if (searchProducts.length !== 0) {
-// 		res.send(searchProducts);
-// 	} else {
-// 		res.send(false);
-// 	}
-// });
 
 const getProductsData = async () => {
 	const findProducts = await ProductData.find();
