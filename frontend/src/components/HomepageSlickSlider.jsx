@@ -6,9 +6,12 @@ import { IoIosArrowBack } from 'react-icons/io';
 import { IoIosArrowForward } from 'react-icons/io';
 
 import StarRating from './StarRating';
+import { Routes, Link, Route } from "react-router-dom"
 
 
 const ArrowBtn = styled.div`
+
+
 `
 
 const settings = {
@@ -132,16 +135,24 @@ const Price = styled.p`
 
 function HomepageSlickSlider({ title, products, itemsShow, type, itemTitle }) {
 
+  const route = (asin) => {
+    return `/product/${asin}`
+  }
   return (
     <SliderContainer id='slider'>
       <h2 style={{ margin: ".5rem" }}>{title}</h2>
       <StyledSlider {...settings} type={type}>
         {products && products.slice(0, itemsShow).map(product =>
           <SlideContainer>
-            <Image src={product.Data.main_image.link} type={type} />
-            {type && <p><StarRating rating={ product.Data.rating}/> {product.Data.reviews_total}</p>}
-            {type && <Headline style={{ display: "block" }}>{product.Data.title}</Headline>}
-            {type && <Price>{product.Data.buybox_winner.new_offers_from && product.Data.buybox_winner.new_offers_from.raw}</Price>}
+            <Link to={route(product.Data.asin)}><Image src={product.Data.main_image.link} type={type} /></Link>
+            {type &&
+              <>
+              <p><StarRating rating={product.Data.rating} /> {product.Data.reviews_total}</p>
+              <Link to={route(product.Data.asin)}><Headline style={{ display: "block" }}>{product.Data.title}</Headline></Link>
+              <Price>${product.Price}</Price>
+            </>}
+            
+            
           </SlideContainer>
         )}
       </StyledSlider>

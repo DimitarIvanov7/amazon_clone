@@ -3,9 +3,20 @@ import styled from 'styled-components'
 
 import { GrLocation } from 'react-icons/gr';
 import { BsSearch } from 'react-icons/bs';
-import {FiShoppingCart} from 'react-icons/fi';
+import { FiShoppingCart } from 'react-icons/fi';
+import { Link } from 'react-router-dom'
+
 
 const Container = styled.div`
+    width: 100%;
+    background-color: black;
+    display: grid;
+    padding: .4rem 0 0 0;
+    gap: 2rem;
+    align-items: center;
+`
+
+const Top = styled.div`
     width: 100%;
     background-color: black;
     display: flex;
@@ -113,35 +124,69 @@ const ItemNumber = styled.p`
     text-align: center;
 `
 
+const CategorySlide = styled.div`
+    display: flex;
+    background-color: #232f3e;
+    gap: 2rem;
+    padding: 0 1rem;
+`
 
-function Header({categories}) {
+const CategoryName = styled.p`
+    color: white;
+    cursor: pointer;
+    border: 1px solid transparent;
+    padding: .5rem .3rem;
+    margin: .3rem 0;
+
+    &:hover {
+        border: 1px solid white;
+    }
+`
+
+
+function Header({ categories }) {
+    
+
+    const getLink = (category) => {
+        return `/category/${category}`
+    }
+
+
   return (
       <Container>
-        <Logo src='/images/Amazon-Logo1.png' />
-        <LocationContainer>&nbsp; &nbsp;  &nbsp; Deliver to <Location><GrLocation size={20} className='icon-location' />Bulgaria</Location></LocationContainer>
-        <SeachContainer>
-            <SearchBar />
-              <Categories>
-                  {categories && categories.map(categorie => {
-                      if (categorie === "All Departments") {
-                          return <option value={categorie} selected>All</option>
-                        }
-                      return <option value={categorie}>{categorie}</option>
-                  })}
-            </Categories>
-            <SearchIconContainer>
-            <BsSearch/>
-        </SearchIconContainer>
-        
-        </SeachContainer>
-        <LanguagesCountainer>
-              <CountryFlags src='http://purecatamphetamine.github.io/country-flag-icons/3x2/US.svg' />
-              <p style={{color:"white", cursor:"pointer", fontSize:"10px"}}>▼</p>
-        </LanguagesCountainer>
-          <ShoppingCartContainer>
-            <ItemNumber>1</ItemNumber>
-            <FiShoppingCart size={30} />
-        </ShoppingCartContainer>
+          <Top>
+            <Logo src='/images/Amazon-Logo1.png' />
+            <LocationContainer>&nbsp; &nbsp;  &nbsp; Deliver to <Location><GrLocation size={20} className='icon-location' />Bulgaria</Location></LocationContainer>
+            <SeachContainer>
+                <SearchBar />
+                <Categories>
+                    {categories.map(categorie => {
+                        if (categorie === "All Departments") {
+                            return <option value={categorie} selected>All</option>
+                            }
+                        return <option value={categorie}>{categorie}</option>
+                    })}
+                </Categories>
+                <SearchIconContainer>
+                <BsSearch/>
+            </SearchIconContainer>
+            
+            </SeachContainer>
+            <LanguagesCountainer>
+                <CountryFlags src='http://purecatamphetamine.github.io/country-flag-icons/3x2/US.svg' />
+                <p style={{color:"white", cursor:"pointer", fontSize:"10px"}}>▼</p>
+            </LanguagesCountainer>
+            <ShoppingCartContainer>
+                <ItemNumber>1</ItemNumber>
+                <FiShoppingCart size={30} />
+                </ShoppingCartContainer>
+            </Top>
+          <CategorySlide>
+              {categories.map(category => 
+                  <Link to={getLink(category)}><CategoryName>{category}</CategoryName></Link>
+                )}
+                
+          </CategorySlide>
         
     </Container>
   )

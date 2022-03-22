@@ -10,6 +10,7 @@ import { BsStarHalf } from 'react-icons/bs';
 
 
 const Container = styled.div`
+    cursor: pointer;
 
     flex-direction: row !important;
 
@@ -25,19 +26,25 @@ function StarRating({ rating }) {
     const starsLeft = 5-rating;
 
     const starArr = () => {
+        if (!rating) return
+        
         let arr = []
         for (let i = 0; i < rounded; i++) {
             arr.push(<AiFillStar size={21}/>)
         }
 
         if(rating - rounded > .3) {
-            arr.push(<BsStarHalf size={21}/>)
+            arr.push(<BsStarHalf size={18} style={{ paddingBottom: "2px" }} />)
         }
 
         if (starsLeft > 1) {
             for (let i = 0; i < Math.floor(starsLeft); i++) {
                 arr.push(<AiOutlineStar size={21}/>)
             }
+        }
+
+        if (arr.length<5) {
+            arr.push(<AiOutlineStar size={21}/>)
         }
 
         return arr

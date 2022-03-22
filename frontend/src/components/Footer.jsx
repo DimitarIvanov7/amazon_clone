@@ -4,7 +4,7 @@ import FooterLinks from './FooterLinks'
 
 
 const Container = styled.div`
-    margin-top: 7rem;
+    /* margin-top: 7rem; */
     width: 100%;
     display: flex;
     flex-direction: column;

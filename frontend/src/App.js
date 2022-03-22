@@ -1,65 +1,50 @@
 import styled from "styled-components";
-import { useState, useEffect, useRef } from 'react'
-import {BrowserRouter, Link, Route, Routes } from 'react-router-dom'
+import { useState, useEffect } from "react";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Home from "./pages/Home";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import Product from "./pages/Product";
+import GetAllProducstData from "./hooks-functions/GetAllProductsData";
+import Category from "./pages/Category";
+import Cart from "./pages/Cart";
 
-
-const MainContainer = styled.div`  
-`
+const MainContainer = styled.div``;
 function App() {
+	const [categories, setCategories] = useState([]);
 
-  const [categories, setCategories] = useState([])
+	const [products, setProducts] = useState([]);
 
-  const [products, setProducts] = useState([])
+	useEffect(() => {
+		getProductData();
+	}, []);
 
-  useEffect(() => {
-      getProductData()
-      
-  }, [])
+	const getProductData = async () => {
+		const Data = await GetAllProducstData("get-products");
 
+		setCategories(Data.categories);
 
-  const getProductData = async () => {
-      const req = await fetch('http://localhost:5000/get-products');
-      const res = await req.json()
+		setProducts(Data.products);
+	};
 
-      const uniqueCategories = res.map(item => item.Data.categories[0].name)
-          .filter((item, i, ar) => ar.indexOf(item) === i)
-          .sort()
-      
-      setCategories(uniqueCategories)
-
-      const categoriesObj = uniqueCategories.map(categorie => {
-          return res.filter(product => product.Data.categories[0].name===categorie)
-      })
-      
-      setProducts(categoriesObj)
-  }
-
-
-  return (
-    <>
-      <BrowserRouter>
-        <MainContainer id='main-container'>
-            {categories.length !== 0 &&
-            <Header categories={categories} />
-          }
-          {products.length > 0 &&
-              <>
-                <Routes>
-                  <Route path='/' element={<Home products={products} />} />
-                  <Route path='/product/:id' element={<Product />} />
-                
-                </Routes>
-                <Footer />
-            </>
-          }
-        </MainContainer>
-      </BrowserRouter>
-    </>
-  );
+	return (
+		<>
+			<MainContainer id="main-container">
+				{categories.length !== 0 && <Header categories={categories} />}
+				{products.length > 0 && (
+					<>
+						<Routes>
+							<Route path="/" element={<Home products={products} />} />
+							<Route path="/product/:id" element={<Product />} />
+							<Route path="/category/:name" element={<Category />} />
+							<Route path="/cart" element={<Cart />} />
+						</Routes>
+						<Footer />
+					</>
+				)}
+			</MainContainer>
+		</>
+	);
 }
 
 export default App;
