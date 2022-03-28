@@ -2,7 +2,6 @@ import React from "react";
 import HeroSlider from "../components/HeroSlider";
 import Categories from "../components/CategoriesHomepage";
 import styled from "styled-components";
-import { useState, useEffect, useRef } from "react";
 
 const HeroContainer = styled.div`
 	width: 100%;

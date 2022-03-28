@@ -3,17 +3,18 @@ import styled from "styled-components";
 import { GrLocation } from "react-icons/gr";
 import { BsSearch } from "react-icons/bs";
 import { FiShoppingCart } from "react-icons/fi";
+
+import { GiHamburgerMenu } from "react-icons/gi";
 import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-
 import { useSelector } from "react-redux";
 
+import { bigTablet, phone } from "../responsive";
+
 const Container = styled.div`
-	width: 100%;
 	background-color: black;
 	display: grid;
-	/* grid-template-columns: auto minmax(0, 1fr); */
 	padding: 0.4rem 0 0 0;
 	gap: 2rem;
 	align-items: center;
@@ -21,19 +22,25 @@ const Container = styled.div`
 
 const Top = styled.div`
 	display: flex;
-	width: 100vw;
+	max-width: 100vw;
 	background-color: black;
 	padding: 0.4rem 0;
 	gap: 2rem;
+	${bigTablet({
+		gap: ".5rem",
+	})}
 `;
 const Logo = styled.img`
-	width: 8rem;
+	max-width: 8rem;
 `;
 
 const LocationContainer = styled.div`
 	color: white;
 	font-size: 12px;
 	margin: auto 0;
+	${bigTablet({
+		display: "none",
+	})}
 `;
 
 const Location = styled.p`
@@ -51,15 +58,19 @@ const Location = styled.p`
 
 const SeachContainer = styled.div`
 	display: flex;
-	width: 100%;
+	flex: 0 1 55rem;
 	position: relative;
 	align-items: center;
+
+	${bigTablet({
+		flex: "1 0 10rem",
+	})}
 `;
 
 const SearchBar = styled.input`
 	display: flex;
 	width: 100%;
-	min-width: 10rem;
+	min-width: 5rem;
 	height: 65%;
 	border-radius: 10px;
 	border: 0;
@@ -99,15 +110,19 @@ const SearchIconContainer = styled.div`
 `;
 
 const LanguagesCountainer = styled.div`
-	width: 1.8rem;
+	max-width: 1.8rem;
 	margin: auto 0;
 	display: flex;
 	gap: 5px;
+
+	${bigTablet({
+		display: "none",
+	})}
 `;
 const CountryFlags = styled.img``;
 
 const ShoppingCartContainer = styled.div`
-	margin: auto 7rem;
+	margin-left: auto;
 	cursor: pointer;
 
 	svg {
@@ -125,10 +140,26 @@ const ItemNumber = styled.p`
 
 const CategorySlide = styled.div`
 	display: flex;
-	/* flex-wrap: wrap; */
+	max-width: 100vw;
 	background-color: #232f3e;
-	gap: 2rem;
+	gap: 1rem;
 	padding: 0 1rem;
+	min-height: 3rem;
+
+	svg {
+		color: white;
+		margin: auto 0;
+		cursor: pointer;
+		display: none;
+
+		${bigTablet({
+			display: "block",
+		})}
+	}
+
+	${bigTablet({
+		flexDirection: "column",
+	})}
 `;
 
 const CategoryName = styled.p`
@@ -141,6 +172,14 @@ const CategoryName = styled.p`
 	&:hover {
 		border: 1px solid white;
 	}
+`;
+
+const StyledLink = styled(Link)`
+	margin: ${(props) => (props.category ? " 0" : "auto 2rem")};
+
+	${bigTablet({
+		display: (props) => (props.category && !props.open ? "none" : "flex"),
+	})}
 `;
 
 function Header({ categories }) {
@@ -165,9 +204,17 @@ function Header({ categories }) {
 		initialQuant
 	);
 
+	const [menu, setMenu] = useState(false);
+
+	const handleMobileNav = () => {
+		setMenu(!menu);
+	};
+
+	console.log(menu);
+
 	return (
 		<Container data-testid="header-1">
-			<Top>
+			<Top id="top">
 				<Link to="/">
 					<Logo src="/images/Amazon-Logo1.png" />
 				</Link>
@@ -202,18 +249,19 @@ function Header({ categories }) {
 						▼
 					</p>
 				</LanguagesCountainer>
-				<Link to="/cart">
+				<StyledLink to="/cart">
 					<ShoppingCartContainer>
 						<ItemNumber data-testid="cart-quant">{totalQuant}</ItemNumber>
 						<FiShoppingCart size={30} />
 					</ShoppingCartContainer>
-				</Link>
+				</StyledLink>
 			</Top>
-			<CategorySlide>
+			<CategorySlide id="category-slide">
+				<GiHamburgerMenu size={40} onClick={handleMobileNav} />
 				{categories.map((category) => (
-					<Link to={getLink(category)}>
+					<StyledLink open={menu} category={true} to={getLink(category)}>
 						<CategoryName>{category}</CategoryName>
-					</Link>
+					</StyledLink>
 				))}
 			</CategorySlide>
 		</Container>

@@ -28,8 +28,3 @@ test("cart value should be 0", () => {
 	const cartQuant = screen.getByTestId("cart-quant");
 	expect(cartQuant).toHaveTextContent(0);
 });
-
-test("cart value should be 0", () => {
-	const cartQuant = screen.getByTestId("cart-quant");
-	expect(cartQuant).toHaveTextContent(0);
-});
