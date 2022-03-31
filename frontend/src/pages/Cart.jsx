@@ -169,8 +169,8 @@ function Cart() {
 				navigate("/");
 				window.scrollTo({ top: 0, behavior: "smooth" });
 			} catch (err) {
-				console.log("Failed to purchase");
-				alert("err");
+				console.log(err);
+				alert("Failed to purchase");
 				// removeAll();
 				// navigate("/");
 			}
