@@ -14,7 +14,7 @@ const __dirname = path.resolve();
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 app.use(express.json());
 
