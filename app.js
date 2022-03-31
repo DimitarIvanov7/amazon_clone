@@ -26,6 +26,8 @@ app.use(
 	})
 );
 
+console.log(MONGODB_URI);
+
 //heroku
 app.use(express.static(path.join(__dirname, "frontend", "build")));
 
