@@ -282,7 +282,7 @@ function Product() {
 	}, [id]);
 
 	const scrollTop = () => {
-		window.scrollTo({ top: 0, behavior: "smooth" });
+		window.scrollTo({ top: 0 });
 	};
 
 	const getProductData = async () => {
