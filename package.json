@@ -21,7 +21,9 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "eslint frontend/src --ext .js,.jsx --max-warnings=0",
-		"prepare": "husky install"
+		"prepare": "husky install",
+		"heroku-postbuild": "cd frontend && npm install && npm run build",
+		"start": "node app.js"
 	},
 	"author": "",
 	"license": "ISC",
