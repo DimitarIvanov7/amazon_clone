@@ -1,60 +1,60 @@
-import styled from 'styled-components'
+import styled from "styled-components";
 
-import { AiOutlineStar } from 'react-icons/ai';
+import { AiOutlineStar } from "react-icons/ai";
 
-import { AiFillStar } from 'react-icons/ai';
+import { AiFillStar } from "react-icons/ai";
 
-import { BsStarHalf } from 'react-icons/bs';
+import { BsStarHalf } from "react-icons/bs";
 
-
-
+import { v4 as uuidv4 } from "uuid";
 
 const Container = styled.div`
-    cursor: pointer;
+	cursor: pointer;
 
-    flex-direction: row !important;
+	flex-direction: row !important;
 
-    svg {
-        color: #ffbb00;
-    }
-`
+	svg {
+		color: #ffbb00;
+	}
+`;
 
-function StarRating({ rating }) {
-    
-    const rounded = Math.floor(rating);
+function StarRating({ rating, size }) {
+	const rounded = Math.floor(rating);
 
-    const starsLeft = 5-rating;
+	const starsLeft = 5 - rating;
 
-    const starArr = () => {
-        if (!rating) return
-        
-        let arr = []
-        for (let i = 0; i < rounded; i++) {
-            arr.push(<AiFillStar size={21}/>)
-        }
+	const starArr = () => {
+		if (!rating) return;
 
-        if(rating - rounded > .3) {
-            arr.push(<BsStarHalf size={18} style={{ paddingBottom: "2px" }} />)
-        }
+		let arr = [];
+		for (let i = 0; i < rounded; i++) {
+			arr.push(<AiFillStar key={uuidv4()} size={size || 21} />);
+		}
 
-        if (starsLeft > 1) {
-            for (let i = 0; i < Math.floor(starsLeft); i++) {
-                arr.push(<AiOutlineStar size={21}/>)
-            }
-        }
+		if (rating - rounded > 0.3) {
+			arr.push(
+				<BsStarHalf
+					key={uuidv4()}
+					size={size - 3 || 18}
+					style={{ paddingBottom: "2px" }}
+				/>
+			);
+		}
 
-        if (arr.length<5) {
-            arr.push(<AiOutlineStar size={21}/>)
-        }
+		if (starsLeft > 1) {
+			for (let i = 0; i < Math.floor(starsLeft); i++) {
+				arr.push(<AiOutlineStar key={uuidv4()} size={size || 21} />);
+			}
+		}
 
-        return arr
-    }
+		if (arr.length < 5) {
+			arr.push(<AiOutlineStar key={uuidv4()} size={size || 21} />);
+		}
 
-  return (
-      <Container id='star-container'>
-          {starArr()}
-      </Container>
-  )
+		return arr;
+	};
+
+	return <Container id="star-container">{starArr()}</Container>;
 }
 
-export default StarRating
+export default StarRating;

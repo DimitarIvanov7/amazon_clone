@@ -29,6 +29,9 @@ const cartReducer = (state = initialState, action) => {
 				(item) => !action.payload.ids.includes(item.spec._id)
 			);
 
+		case "removeAll":
+			return [];
+
 		case "addQuantity":
 			// return;
 			return state.map((item) => {

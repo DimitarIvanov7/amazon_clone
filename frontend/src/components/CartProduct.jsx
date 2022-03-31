@@ -3,6 +3,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { useState, useEffect, useRef } from "react";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
+import { useNavigate } from "react-router-dom";
+import { bigTablet } from "../responsive";
 
 const Container = styled.div`
 	display: flex;
@@ -15,7 +17,6 @@ const Container = styled.div`
 `;
 
 const SelectItem = styled.input`
-	/* color: #007185; */
 	cursor: pointer;
 	margin-right: 1rem;
 `;
@@ -44,17 +45,15 @@ const Title = styled.h3`
 	max-width: 80%;
 	margin: 0;
 	margin-top: 0.5rem;
-	/* overflow: hidden;
-    word-wrap: break-word;
-	text-overflow: ellipsis; */
-	/* max-height: 1.6em; (Number of lines you want visible) * (line-height) */
+	display: -webkit-box;
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
+	cursor: pointer;
 
-	/* .ellipsis::after {
-		content: "...";
-		position: absolute;
-		right: -12px;
-		bottom: 4px;
-	} */
+	${bigTablet({
+		width: "100%",
+	})}
 `;
 
 const InStock = styled.p`
@@ -92,7 +91,13 @@ const DeleteItem = styled.p`
 const PriceContainer = styled.div`
 	width: 10%;
 	display: flex;
+	white-space: nowrap;
+	margin-right: 0.5rem;
 	/* margin-right: 2rem; */
+
+	${bigTablet({
+		width: "20%",
+	})}
 `;
 
 const Price = styled.p`
@@ -131,15 +136,24 @@ function CartProduct({ product, SelectRef, setSelect }) {
 			});
 	};
 
+	let navigate = useNavigate();
+
+	const handleNavigateProduct = () => {
+		const asin = product.spec.Data.asin;
+		const path = `/product/${asin}`;
+		navigate(path);
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	};
+
 	return (
 		<Container ref={SelectRef} id={product.spec._id}>
 			<ImageContainer>
 				<SelectItem onClick={() => setSelect()} type="checkbox"></SelectItem>
-				<ImageMain src={imgSrc} />
+				<ImageMain onClick={handleNavigateProduct} src={imgSrc} />
 			</ImageContainer>
 
 			<InfoContainer>
-				<Title>{product.spec.Data.title}</Title>
+				<Title onClick={handleNavigateProduct}>{product.spec.Data.title}</Title>
 				<InStock stockData={Stock}>In Stock</InStock>
 				<ChangesContainer>
 					<ChangeQuantBtn onClick={() => handleQuantChange("-")}>

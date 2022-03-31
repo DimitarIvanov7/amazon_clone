@@ -10,7 +10,9 @@ import Category from "./pages/Category";
 import Cart from "./pages/Cart";
 import Checkout from "./pages/Checkout";
 
-const MainContainer = styled.div``;
+const MainContainer = styled.div`
+	width: 100%;
+`;
 
 function App() {
 	const [categories, setCategories] = useState([]);

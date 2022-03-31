@@ -25,6 +25,14 @@ export const removeMultiple = (ids) => {
 	};
 };
 
+export const removeAll = () => {
+	return (dispatch) => {
+		dispatch({
+			type: "removeAll",
+		});
+	};
+};
+
 export const addQuantity = (id) => {
 	return (dispatch) => {
 		dispatch({

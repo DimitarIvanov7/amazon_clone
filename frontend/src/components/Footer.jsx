@@ -1,9 +1,9 @@
 import styled from "styled-components";
 
 import FooterLinks from "./FooterLinks";
+import { phone, bigTablet } from "../responsive";
 
 const Container = styled.div`
-	/* margin-top: 7rem; */
 	width: 100%;
 	display: flex;
 	flex-direction: column;
@@ -22,6 +22,11 @@ const Top = styled.div`
 		justify-content: center;
 		width: 80%;
 		gap: 3rem;
+
+		${bigTablet({
+			flexWrap: "wrap",
+			justifyContent: "space-between",
+		})}
 	}
 `;
 
@@ -35,6 +40,11 @@ const Bottom = styled.div`
 		display: flex;
 		justify-content: center;
 		width: 80%;
+
+		${bigTablet({
+			flexWrap: "wrap",
+			justifyContent: "space-between",
+		})}
 	}
 `;
 
@@ -111,7 +121,7 @@ function Footer() {
 			<Bottom>
 				<div className="wrapper-footer-bot">
 					{linksBottom.map((link, index) => (
-						<FooterLinks key={index} links={link}></FooterLinks>
+						<FooterLinks key={index} links={link} type={"bottom"}></FooterLinks>
 					))}
 				</div>
 			</Bottom>

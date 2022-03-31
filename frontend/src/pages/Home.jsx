@@ -2,7 +2,8 @@ import React from "react";
 import HeroSlider from "../components/HeroSlider";
 import Categories from "../components/CategoriesHomepage";
 import styled from "styled-components";
-import { useState, useEffect, useRef } from "react";
+
+import { phone, bigTablet } from "../responsive";
 
 const HeroContainer = styled.div`
 	width: 100%;
@@ -11,6 +12,14 @@ const HeroContainer = styled.div`
 	display: grid;
 	grid-template-rows: repeat(25, 1fr);
 	justify-items: center;
+
+	${bigTablet({
+		gridTemplateRows: "repeat(28, 1fr)",
+	})}
+
+	${phone({
+		gridTemplateRows: "repeat(50, 1fr)",
+	})}
 `;
 
 function Home({ products }) {

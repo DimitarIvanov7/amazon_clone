@@ -6,10 +6,12 @@ import SpecificItem from "../components/SpecificItem";
 import StarRating from "../components/StarRating";
 import { useLocation } from "react-router-dom";
 import GetAllProductsData from "../hooks-functions/GetAllProductsData";
-
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
+import { phone } from "../responsive";
+import { IoIosArrowDropupCircle } from "react-icons/io";
+import { v4 as uuidv4 } from "uuid";
 
 const Container = styled.div`
 	display: grid;
@@ -17,30 +19,104 @@ const Container = styled.div`
 	padding-bottom: 5rem;
 	width: 100%;
 	background-color: white;
+	grid-gap: 0.5rem;
+
+	${phone({
+		display: "block",
+	})}
 `;
 
 const ResultsContainer = styled.div`
 	grid-column: 2/-1;
+
+	h2 {
+		${phone({
+			textAlign: "center",
+		})}
+	}
 `;
 
 const ProductsContainer = styled.div`
 	display: flex;
-	width: 100%;
+	width: 95%;
 	flex-wrap: wrap;
 	gap: 0.5rem;
-	margin-right: 2rem;
+
+	${phone({
+		margin: "0 auto",
+	})};
 `;
 
 const FiltersContainer = styled.div`
+	margin-top: 3.5rem;
 	grid-column: 1/1;
 	display: flex;
 	padding-left: 2rem;
 	align-items: flex-start;
 	flex-direction: column;
+	min-width: 12rem;
+	background-color: white;
+	z-index: 99;
+
+	//make it sticky
+	align-self: start;
+	position: sticky;
+	top: 0;
+
+	${phone({
+		padding: "0",
+	})}
+
+	.close-filters {
+		cursor: pointer;
+		margin: 0.5rem 1rem 0 auto;
+		display: none;
+		${phone({
+			display: "block",
+		})}
+	}
+
+	div,
+	svg {
+		transition: all 1s ease;
+	}
+
+	div {
+		${phone({
+			height: (props) => !props.open && "0",
+			overflowX: (props) => !props.open && "hidden",
+			margin: (props) => !props.open && "0",
+		})}
+	}
+
+	svg {
+		${phone({
+			transform: (props) => !props.open && " rotate(180deg)",
+		})}
+	}
+
+	/* ${(props) => {
+		if (!props.open)
+			return `
+	div {
+		height: 0;
+		overflow-x: hidden;
+		margin: 0;
+		
+	}
+
+	svg {
+		transform: rotate(180deg)
+	}
+	`;
+	}} */
 `;
 
 const ReviewsFilter = styled.div`
-	margin-top: 5rem;
+	margin-top: 0.5rem;
+	${phone({
+		margin: "1.5rem auto",
+	})}
 `;
 
 const SmallReviewContainer = styled.div`
@@ -59,8 +135,18 @@ const SmallReviewContainer = styled.div`
 
 const PriceFilter = styled.div`
 	margin-top: 1rem;
+
+	${phone({
+		margin: "1rem auto",
+	})}
 `;
-const PriceRangeContainer = styled.div``;
+const PriceRangeContainer = styled.div`
+	p {
+		${phone({
+			textAlign: "center",
+		})}
+	}
+`;
 const PriceRange = styled.p`
 	cursor: pointer;
 
@@ -68,12 +154,20 @@ const PriceRange = styled.p`
 		text-decoration: underline;
 		color: #ee9e0a;
 	}
+
+	${phone({
+		textAlign: "center",
+	})}
 `;
 
 const MinMaxContainer = styled.form`
 	display: flex;
 	max-width: 100%;
 	gap: 0.5rem;
+
+	${phone({
+		justifyContent: "center",
+	})}
 `;
 
 const MinMaxInput = styled.input`
@@ -162,8 +256,6 @@ function Category() {
 	const HandleInputRange = async (e) => {
 		e.preventDefault();
 
-		console.log(minInput.current.value, maxInput.current.value);
-
 		setCategory(
 			searchState.filter((cat) =>
 				filterData(cat, minInput.current.value, maxInput.current.value)
@@ -230,7 +322,13 @@ function Category() {
 			arr.push(
 				<SmallReviewContainer style={{ display: "flex" }}>
 					<StarRating rating={i} />{" "}
-					<p onClick={() => filterReview(i)} id={i}>
+					<p
+						onClick={() => {
+							filterReview(i);
+							handleCloseFilters();
+						}}
+						id={i}
+					>
 						{" "}
 						and Up
 					</p>
@@ -240,9 +338,22 @@ function Category() {
 		return arr;
 	};
 
+	const [isFilterOpen, setIsFilterOpen] = useState(false);
+
+	const handleCloseFilters = () => {
+		setIsFilterOpen(!isFilterOpen);
+	};
+
+	const [isReviewOpen, setIsReviewOpen] = useState();
+
 	return (
 		<Container>
-			<FiltersContainer>
+			<FiltersContainer open={isFilterOpen}>
+				<IoIosArrowDropupCircle
+					onClick={handleCloseFilters}
+					size={40}
+					className="close-filters"
+				/>
 				<ReviewsFilter>
 					<p style={{ margin: "0 0 1rem 0", fontWeight: "bold" }}>
 						Avg. Customer Review
@@ -254,14 +365,23 @@ function Category() {
 						<p style={{ fontWeight: "bold" }}>Price</p>
 						{priceRanges.map((range) => (
 							<div
+								key={uuidv4()}
 								className="filter-fixed-range"
-								onClick={() => filterFixedRange(range)}
+								onClick={() => {
+									filterFixedRange(range);
+									handleCloseFilters();
+								}}
 							>
 								{getPriceRange(range)}
 							</div>
 						))}
 					</PriceRangeContainer>
-					<MinMaxContainer onSubmit={(e) => HandleInputRange(e)}>
+					<MinMaxContainer
+						onSubmit={(e) => {
+							HandleInputRange(e);
+							handleCloseFilters();
+						}}
+					>
 						<MinMaxInput
 							ref={minInput}
 							id="min-price"
@@ -280,10 +400,17 @@ function Category() {
 			</FiltersContainer>
 			<ResultsContainer>
 				<h2>Results</h2>
-				<ProductsContainer>
+				<ProductsContainer id="products-container">
 					{category &&
 						category.map((product) => (
-							<SpecificItem item={product} type={"search"} />
+							<SpecificItem
+								key={product._id}
+								item={product}
+								type={"search"}
+								keyRev={product._id}
+								isOpen={isReviewOpen}
+								setIsReviewOpen={setIsReviewOpen}
+							/>
 						))}
 				</ProductsContainer>
 			</ResultsContainer>

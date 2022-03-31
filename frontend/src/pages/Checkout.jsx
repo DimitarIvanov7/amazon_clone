@@ -1,5 +1,6 @@
-import React from "react";
 import styled from "styled-components";
+import { bigTablet, phone } from "../responsive";
+import { v4 as uuidv4 } from "uuid";
 
 const Container = styled.div`
 	padding-bottom: 4rem;
@@ -10,7 +11,15 @@ const ImgContainer = styled.div`
 	margin-top: 3rem;
 `;
 
-const PositionImg = styled.img``;
+const PositionImg = styled.img`
+	${bigTablet({
+		width: "30rem",
+	})};
+
+	${phone({
+		width: "20rem",
+	})}
+`;
 
 const AddressContainer = styled.form`
 	display: flex;
@@ -20,6 +29,14 @@ const AddressContainer = styled.form`
 	margin: 5rem auto;
 	margin-top: 0;
 	gap: 1rem;
+
+	${bigTablet({
+		width: "50%",
+	})}
+
+	${phone({
+		width: "80%",
+	})}
 
 	input {
 		width: 100%;
@@ -92,7 +109,7 @@ function Checkout() {
 				<h2>Select address</h2>
 				<Country>
 					{countries.map((country) => (
-						<option>{country}</option>
+						<option key={uuidv4()}>{country}</option>
 					))}
 				</Country>
 				<label htmlFor="name">Name: </label>
