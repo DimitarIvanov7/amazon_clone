@@ -170,6 +170,9 @@ function Cart() {
 				window.scrollTo({ top: 0, behavior: "smooth" });
 			} catch (err) {
 				console.log(err);
+				alert("err");
+				// removeAll();
+				// navigate("/");
 			}
 		};
 		stripeToken && makeRequest();
