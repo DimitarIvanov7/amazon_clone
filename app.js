@@ -5,8 +5,12 @@ import mongoose from "mongoose";
 import { ProductData } from "./models/productModel.js";
 import cors from "cors";
 import morgan from "morgan";
-
 import Stripe from "stripe";
+
+import path from "path";
+
+const __dirname = path.resolve();
+
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 const app = express();
@@ -21,6 +25,9 @@ app.use(
 		origin: "http://localhost:3000",
 	})
 );
+
+//heroku
+app.use(express.static(path.join(__dirname, "frontend", "build")));
 
 mongoose
 	.connect(process.env.MONGODB_URI, {
@@ -130,4 +137,10 @@ app.post("/payment", (req, res) => {
 	cart.forEach(async (product) => {
 		await updateQuantity("Data.asin", product.asin, product.quantity);
 	});
+});
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "frontend", "build", "index.html"));
 });
