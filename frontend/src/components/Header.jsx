@@ -6,11 +6,13 @@ import { FiShoppingCart } from "react-icons/fi";
 
 import { GiHamburgerMenu } from "react-icons/gi";
 import { Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 
-import { bigTablet, phone } from "../responsive";
+import { bigTablet } from "../responsive";
+
+import { v4 as uuidv4 } from "uuid";
 
 const Container = styled.div`
 	background-color: black;
@@ -175,6 +177,7 @@ const CategoryName = styled.p`
 `;
 
 const StyledLink = styled(Link)`
+	text-decoration: none;
 	margin: ${(props) => (props.category ? " 0" : "auto 2rem")};
 
 	${bigTablet({
@@ -185,6 +188,7 @@ const StyledLink = styled(Link)`
 function Header({ categories }) {
 	const searchInputRef = useRef();
 	const catInputRef = useRef();
+	const searchButtonRef = useRef();
 
 	let navigate = useNavigate();
 	const handleSearch = () => {
@@ -194,6 +198,12 @@ function Header({ categories }) {
 
 	const getLink = (category) => {
 		return `/category/${category}`;
+	};
+
+	const handleKeyPress = (e) => {
+		if (e.key === "Enter") {
+			handleSearch();
+		}
 	};
 
 	const cart = useSelector((state) => state.cart);
@@ -210,8 +220,6 @@ function Header({ categories }) {
 		setMenu(!menu);
 	};
 
-	console.log(menu);
-
 	return (
 		<Container data-testid="header-1">
 			<Top id="top">
@@ -226,20 +234,30 @@ function Header({ categories }) {
 					</Location>
 				</LocationContainer>
 				<SeachContainer>
-					<SearchBar ref={searchInputRef} />
+					<SearchBar
+						ref={searchInputRef}
+						onKeyPress={(e) => handleKeyPress(e)}
+					/>
 					<Categories ref={catInputRef}>
 						{categories.map((categorie) => {
 							if (categorie === "All Departments") {
 								return (
-									<option value={categorie} selected>
+									<option key={uuidv4()} value={categorie} selected>
 										All
 									</option>
 								);
 							}
-							return <option value={categorie}>{categorie}</option>;
+							return (
+								<option key={uuidv4()} value={categorie}>
+									{categorie}
+								</option>
+							);
 						})}
 					</Categories>
-					<SearchIconContainer onClick={() => handleSearch()}>
+					<SearchIconContainer
+						ref={searchButtonRef}
+						onClick={() => handleSearch()}
+					>
 						<BsSearch />
 					</SearchIconContainer>
 				</SeachContainer>
@@ -259,7 +277,13 @@ function Header({ categories }) {
 			<CategorySlide id="category-slide">
 				<GiHamburgerMenu size={40} onClick={handleMobileNav} />
 				{categories.map((category) => (
-					<StyledLink open={menu} category={true} to={getLink(category)}>
+					<StyledLink
+						key={uuidv4()}
+						open={menu}
+						onClick={handleMobileNav}
+						category={true}
+						to={getLink(category)}
+					>
 						<CategoryName>{category}</CategoryName>
 					</StyledLink>
 				))}

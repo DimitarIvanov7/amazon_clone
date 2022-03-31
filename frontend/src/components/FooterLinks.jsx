@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { phone, bigTablet } from "../responsive";
+import { bigTablet } from "../responsive";
+import { v4 as uuidv4 } from "uuid";
 
 const Container = styled.ul`
 	padding: ${(props) => (props.type ? "1rem" : "0")};
@@ -25,7 +26,11 @@ function FooterLinks({ links, type }) {
 	return (
 		<Container type={type} id="footer-link-container">
 			{links.map((link, index) => {
-				return <Link head={index === 0 && true}>{link}</Link>;
+				return (
+					<Link key={uuidv4()} head={index === 0 && true}>
+						{link}
+					</Link>
+				);
 			})}
 		</Container>
 	);

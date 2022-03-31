@@ -6,13 +6,12 @@ import SpecificItem from "../components/SpecificItem";
 import StarRating from "../components/StarRating";
 import { useLocation } from "react-router-dom";
 import GetAllProductsData from "../hooks-functions/GetAllProductsData";
-
 import { useSelector, useDispatch } from "react-redux";
 import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
 import { phone } from "../responsive";
-
 import { IoIosArrowDropupCircle } from "react-icons/io";
+import { v4 as uuidv4 } from "uuid";
 
 const Container = styled.div`
 	display: grid;
@@ -57,6 +56,7 @@ const FiltersContainer = styled.div`
 	flex-direction: column;
 	min-width: 12rem;
 	background-color: white;
+	z-index: 99;
 
 	//make it sticky
 	align-self: start;
@@ -81,7 +81,21 @@ const FiltersContainer = styled.div`
 		transition: all 1s ease;
 	}
 
-	${(props) => {
+	div {
+		${phone({
+			height: (props) => !props.open && "0",
+			overflowX: (props) => !props.open && "hidden",
+			margin: (props) => !props.open && "0",
+		})}
+	}
+
+	svg {
+		${phone({
+			transform: (props) => !props.open && " rotate(180deg)",
+		})}
+	}
+
+	/* ${(props) => {
 		if (!props.open)
 			return `
 	div {
@@ -95,7 +109,7 @@ const FiltersContainer = styled.div`
 		transform: rotate(180deg)
 	}
 	`;
-	}}
+	}} */
 `;
 
 const ReviewsFilter = styled.div`
@@ -242,8 +256,6 @@ function Category() {
 	const HandleInputRange = async (e) => {
 		e.preventDefault();
 
-		console.log(minInput.current.value, maxInput.current.value);
-
 		setCategory(
 			searchState.filter((cat) =>
 				filterData(cat, minInput.current.value, maxInput.current.value)
@@ -326,13 +338,13 @@ function Category() {
 		return arr;
 	};
 
-	const [isFilterOpen, setIsFilterOpen] = useState(true);
+	const [isFilterOpen, setIsFilterOpen] = useState(false);
 
 	const handleCloseFilters = () => {
 		setIsFilterOpen(!isFilterOpen);
 	};
 
-	console.log(isFilterOpen);
+	const [isReviewOpen, setIsReviewOpen] = useState();
 
 	return (
 		<Container>
@@ -353,6 +365,7 @@ function Category() {
 						<p style={{ fontWeight: "bold" }}>Price</p>
 						{priceRanges.map((range) => (
 							<div
+								key={uuidv4()}
 								className="filter-fixed-range"
 								onClick={() => {
 									filterFixedRange(range);
@@ -390,7 +403,14 @@ function Category() {
 				<ProductsContainer id="products-container">
 					{category &&
 						category.map((product) => (
-							<SpecificItem item={product} type={"search"} />
+							<SpecificItem
+								key={product._id}
+								item={product}
+								type={"search"}
+								keyRev={product._id}
+								isOpen={isReviewOpen}
+								setIsReviewOpen={setIsReviewOpen}
+							/>
 						))}
 				</ProductsContainer>
 			</ResultsContainer>

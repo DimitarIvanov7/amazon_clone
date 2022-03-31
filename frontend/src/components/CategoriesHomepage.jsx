@@ -1,9 +1,9 @@
 import React from "react";
-import { useState, useEffect, useRef } from "react";
 import HomepageSlickSlider from "./HomepageSlickSlider";
 import SpecificItem from "./SpecificItem";
 import styled from "styled-components";
 import { phone, bigTablet } from "../responsive";
+import { useNavigate } from "react-router-dom";
 
 const CategoryContainer = styled.div`
 	width: 95vw;
@@ -14,6 +14,10 @@ const CategoryContainer = styled.div`
 	grid-column: 1/2;
 	grid-row: 3/-1;
 	z-index: 4;
+
+	${bigTablet({
+		gridRow: "2/-1",
+	})}
 `;
 const Category = styled.div`
 	width: 23%;
@@ -53,12 +57,26 @@ const SpecificItemsContainer = styled.div`
 `;
 
 function Categories({ products }) {
+	let navigate = useNavigate();
+
+	const handleCategoriesNav = (category) => {
+		const path = `/category/${category}`;
+		navigate(path);
+		window.scrollTo({ top: 0, behavior: "smooth" });
+	};
+
 	return (
 		<CategoryContainer id="Categories-and-products">
 			{products.map((productArr) => (
 				<Category key={productArr[0].Id}>
-					<h2>{productArr[0].Data.categories[0].name}</h2>
-					<ProductContainer src={productArr[0].Data.main_image.link} />
+					<h2 className="cat-name">{productArr[0].Data.categories[0].name}</h2>
+
+					<ProductContainer
+						onClick={() =>
+							handleCategoriesNav(productArr[0].Data.categories[0].name)
+						}
+						src={productArr[0].Data.main_image.link}
+					/>
 				</Category>
 			))}
 

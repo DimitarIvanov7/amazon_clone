@@ -4,6 +4,8 @@ import StarRating from "./StarRating";
 
 import { IoIosArrowDown } from "react-icons/io";
 import { phone, bigTablet, desktop } from "../responsive";
+import ReviewsSummary from "./ReviewsSummary";
+import { useState, useEffect, useRef } from "react";
 
 const Container = styled.div`
 	background-color: white;
@@ -54,6 +56,7 @@ const NormalLink = styled.a`
 
 const InfoContainer = styled.div`
 	margin-bottom: auto;
+	position: relative;
 `;
 
 const Title = styled.h4`
@@ -95,15 +98,35 @@ const ReviewContainer = styled.div`
 	}
 `;
 
-const RerviewInfoContainer = styled.div``;
+const ReviewInfoContainer = styled.div`
+	position: absolute;
+	top: 7rem;
+	left: -1rem;
+	background-color: white;
+	border: 1px solid black;
+	padding: 1rem 0.5rem;
+	z-index: 20;
+	/* display: ${(props) => (props.open ? "block" : "none")}; */
+	transition: all 0.7s ease-in-out;
+	opacity: ${(props) => (props.open ? "1" : "0")};
+`;
 
 const Location = styled.p`
 	font-weight: 100;
 	font-size: 12px;
 `;
 
-function SpecificItem({ item, message = "More items to consider", type }) {
+function SpecificItem({
+	item,
+	message = "More items to consider",
+	type,
+	keyRev,
+	isOpen,
+	setIsReviewOpen,
+}) {
 	const route = `/product/${item.Data.asin}`;
+
+	const isReviewOpen = keyRev === isOpen ? true : false;
 
 	return (
 		<Container type={type}>
@@ -125,13 +148,25 @@ function SpecificItem({ item, message = "More items to consider", type }) {
 					<Link style={{ textDecoration: "none", color: "black" }} to={route}>
 						<Title> {item.Data.title}</Title>
 					</Link>
-					<ReviewContainer>
+					<ReviewContainer
+						onMouseEnter={() => setIsReviewOpen(keyRev)}
+						onMouseLeave={() => setIsReviewOpen(null)}
+					>
 						<StarRating rating={item.Data.rating} />
 						{item.Data.rating && <IoIosArrowDown className="arrow-down" />}
 						<p>{item.Data.ratings_total}</p>
 					</ReviewContainer>
 					<Price>${item.Price}</Price>
 					<Location>Ships to Bulgaria</Location>
+					<ReviewInfoContainer open={isReviewOpen}>
+						<ReviewsSummary
+							rating={item.Data.rating_breakdown}
+							total={item.Data.rating}
+							totalNum={item.Data.ratings_total}
+							inSearch={true}
+							open={isReviewOpen}
+						/>
+					</ReviewInfoContainer>
 				</InfoContainer>
 			)}
 		</Container>

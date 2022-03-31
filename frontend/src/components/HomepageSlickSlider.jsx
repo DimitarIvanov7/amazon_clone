@@ -7,6 +7,7 @@ import { IoIosArrowForward } from "react-icons/io";
 
 import StarRating from "./StarRating";
 import { Link } from "react-router-dom";
+import { v4 as uuidv4 } from "uuid";
 
 const ArrowBtn = styled.div``;
 
@@ -15,7 +16,7 @@ const settings = {
 	infinite: true,
 	speed: 500,
 	slidesToShow: 4,
-	slidesToScroll: 2,
+	slidesToScroll: 1,
 	responsive: [
 		{
 			breakpoint: 1000,
@@ -51,6 +52,7 @@ const SliderContainer = styled.div`
 	margin: 0 auto;
 	background-color: white;
 	position: relative;
+	grid-column: ${(props) => props.similar && "1/3"};
 `;
 
 const StyledSlider = styled(Slider)`
@@ -92,6 +94,7 @@ const StyledSlider = styled(Slider)`
 
 	.slick-track {
 		display: flex;
+		margin: 0 auto;
 	}
 
 	.slick-track .slick-slide {
@@ -133,6 +136,11 @@ const Image = styled.img`
 const Headline = styled.h3`
 	color: #007185;
 	margin: 0 10px;
+	display: -webkit-box;
+	/* display: box; */
+	-webkit-line-clamp: 2;
+	-webkit-box-orient: vertical;
+	overflow: hidden;
 
 	&:hover {
 		text-decoration: underline;
@@ -146,17 +154,24 @@ const Price = styled.p`
 	margin-top: 10px !important;
 `;
 
-function HomepageSlickSlider({ title, products, itemsShow, type, itemTitle }) {
+function HomepageSlickSlider({
+	title,
+	products,
+	itemsShow,
+	type,
+	itemTitle,
+	similar,
+}) {
 	const route = (asin) => {
 		return `/product/${asin}`;
 	};
 	return (
-		<SliderContainer id="slider">
+		<SliderContainer id="slider" similar={similar}>
 			<h2 style={{ margin: ".5rem" }}>{title}</h2>
 			<StyledSlider {...settings} type={type}>
 				{products &&
 					products.slice(0, itemsShow).map((product) => (
-						<SlideContainer>
+						<SlideContainer key={uuidv4()}>
 							<Link to={route(product.Data.asin)}>
 								<Image src={product.Data.main_image.link} type={type} />
 							</Link>
@@ -167,9 +182,7 @@ function HomepageSlickSlider({ title, products, itemsShow, type, itemTitle }) {
 										{product.Data.reviews_total}
 									</p>
 									<Link to={route(product.Data.asin)}>
-										<Headline style={{ display: "block" }}>
-											{product.Data.title}
-										</Headline>
+										<Headline>{product.Data.title}</Headline>
 									</Link>
 									<Price>${product.Price}</Price>
 								</>
