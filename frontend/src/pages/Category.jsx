@@ -202,6 +202,8 @@ function Category() {
 		getData();
 	}, [name, q, cat]);
 
+	console.log(name);
+
 	//redux tests
 	const dispatch = useDispatch();
 	const { initialState } = bindActionCreators(actionCreators, dispatch);
