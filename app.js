@@ -73,12 +73,12 @@ const formatCategory = (categoryName) => {
 	return formatted.join(" ");
 };
 
-app.get("/get-products", async (req, res) => {
+app.get("api/get-products", async (req, res) => {
 	const awaitProductsData = await getProductsData();
 	res.send(awaitProductsData);
 });
 
-app.get("/product/:id", async (req, res) => {
+app.get("api/product/:id", async (req, res) => {
 	const productId = req.params.id;
 
 	const getProduct = await ProductData.findOne({
@@ -94,7 +94,7 @@ app.get("/product/:id", async (req, res) => {
 	}
 });
 
-app.get("/category/:name", async (req, res) => {
+app.get("api/category/:name", async (req, res) => {
 	const categoryName = req.params.name;
 
 	const fortmatCat = formatCategory(categoryName);
@@ -116,7 +116,7 @@ app.get("/category/:name", async (req, res) => {
 	}
 });
 
-app.post("/payment", (req, res) => {
+app.post("api/payment", (req, res) => {
 	stripe.charges.create(
 		{
 			source: req.body.tokenId,

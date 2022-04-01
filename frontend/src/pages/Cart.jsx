@@ -152,7 +152,7 @@ function Cart() {
 			});
 
 			try {
-				const res = await fetch(`http://localhost:5000/payment`, {
+				const res = await fetch(`api/payment`, {
 					headers: {
 						"Content-Type": "application/json",
 					},

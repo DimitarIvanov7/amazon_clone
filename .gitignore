@@ -7,3 +7,5 @@ frontend/node_modules
 .eslintcache
 
 .eslintrc.json
+
+webpack.config.json

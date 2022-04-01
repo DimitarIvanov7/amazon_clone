@@ -1,5 +1,5 @@
 const GetAllProductsData = async (location) => {
-	const req = await fetch(`/${location}`);
+	const req = await fetch(`api/${location}`);
 	const res = await req.json();
 
 	const uniqueCategories = res
