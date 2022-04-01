@@ -5,7 +5,6 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
 import CartProduct from "../components/CartProduct";
 import { desktop } from "../responsive";
-
 import StripeCheckout from "react-stripe-checkout";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
