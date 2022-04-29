@@ -5,7 +5,6 @@ import { bindActionCreators } from "redux";
 import { actionCreators } from "../state/index";
 import CartProduct from "../components/CartProduct";
 import { desktop } from "../responsive";
-
 import StripeCheckout from "react-stripe-checkout";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -153,7 +152,7 @@ function Cart() {
 			});
 
 			try {
-				const res = await fetch(`http://localhost:5000/payment`, {
+				const res = await fetch(`api/payment`, {
 					headers: {
 						"Content-Type": "application/json",
 					},
@@ -170,6 +169,9 @@ function Cart() {
 				window.scrollTo({ top: 0, behavior: "smooth" });
 			} catch (err) {
 				console.log(err);
+				alert("Failed to purchase");
+				// removeAll();
+				// navigate("/");
 			}
 		};
 		stripeToken && makeRequest();

@@ -5,12 +5,16 @@ import mongoose from "mongoose";
 import { ProductData } from "./models/productModel.js";
 import cors from "cors";
 import morgan from "morgan";
-
 import Stripe from "stripe";
+
+import path from "path";
+
+const __dirname = path.resolve();
+
 const stripe = new Stripe(process.env.STRIPE_KEY);
 
 const app = express();
-const port = process.env.PORT;
+const port = process.env.PORT || 5000;
 
 app.use(express.json());
 
@@ -21,6 +25,9 @@ app.use(
 		origin: "http://localhost:3000",
 	})
 );
+
+//heroku
+app.use(express.static(path.join(__dirname, "frontend", "build")));
 
 mongoose
 	.connect(process.env.MONGODB_URI, {
@@ -66,12 +73,12 @@ const formatCategory = (categoryName) => {
 	return formatted.join(" ");
 };
 
-app.get("/get-products", async (req, res) => {
+app.get("/api/get-products", async (req, res) => {
 	const awaitProductsData = await getProductsData();
 	res.send(awaitProductsData);
 });
 
-app.get("/product/:id", async (req, res) => {
+app.get("/api/product/:id", async (req, res) => {
 	const productId = req.params.id;
 
 	const getProduct = await ProductData.findOne({
@@ -87,7 +94,7 @@ app.get("/product/:id", async (req, res) => {
 	}
 });
 
-app.get("/category/:name", async (req, res) => {
+app.get("/api/category/:name", async (req, res) => {
 	const categoryName = req.params.name;
 
 	const fortmatCat = formatCategory(categoryName);
@@ -109,7 +116,7 @@ app.get("/category/:name", async (req, res) => {
 	}
 });
 
-app.post("/payment", (req, res) => {
+app.post("/api/payment", (req, res) => {
 	stripe.charges.create(
 		{
 			source: req.body.tokenId,
@@ -118,6 +125,7 @@ app.post("/payment", (req, res) => {
 		},
 		(stripeErr, stripeRes) => {
 			if (stripeErr) {
+				console.log(stripeErr);
 				res.status(500).json(stripeErr);
 			} else {
 				res.json(stripeRes);
@@ -130,4 +138,10 @@ app.post("/payment", (req, res) => {
 	cart.forEach(async (product) => {
 		await updateQuantity("Data.asin", product.asin, product.quantity);
 	});
+});
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get("*", (req, res) => {
+	res.sendFile(path.join(__dirname, "frontend", "build", "index.html"));
 });

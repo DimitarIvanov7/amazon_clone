@@ -44,6 +44,7 @@ function App() {
 							<Route path="/search" element={<Category />} />
 							<Route path="/cart" element={<Cart />} />
 							<Route path="/checkout" element={<Checkout />} />
+							<Route path="*" element={<Home products={products} />} />
 						</Routes>
 						<Footer />
 					</>

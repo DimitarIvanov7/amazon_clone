@@ -1,8 +1,8 @@
 const GetSingleProductsData = async (id) => {
-    const req = await fetch(`http://localhost:5000/product/${id}`);
-    const res = await req.json()
+	const req = await fetch(`/api/product/${id}`);
+	const res = await req.json();
 
-    return res
-}
+	return res;
+};
 
-export default GetSingleProductsData
+export default GetSingleProductsData;
